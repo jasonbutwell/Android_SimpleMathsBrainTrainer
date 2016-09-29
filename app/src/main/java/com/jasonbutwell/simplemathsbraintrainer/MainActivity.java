@@ -1,6 +1,7 @@
 package com.jasonbutwell.simplemathsbraintrainer;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     TextView resultTextView;
     TextView pointsTextView;
     TextView sumTextView;
+    TextView timerTextView;
     ArrayList<Integer> answers;
 
     int locationOfCorrectAnswer;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         sumTextView.setText(Integer.toString(a)+ "+" + Integer.toString(b));
 
         locationOfCorrectAnswer = rand.nextInt(4);
-        
+
         // clear previous answer entries if we have them
         if ( answers.size() > 0 )
             answers.clear();
@@ -98,12 +100,32 @@ public class MainActivity extends AppCompatActivity {
         answerButtons[2] = (Button) findViewById(R.id.button2);
         answerButtons[3] = (Button) findViewById(R.id.button3);
 
+        // obtain textview references
         resultTextView = (TextView) findViewById(R.id.resultTextView);
         pointsTextView = (TextView) findViewById(R.id.pointsTextView);
         sumTextView = (TextView) findViewById(R.id.sumTextView);
+        timerTextView = (TextView) findViewById(R.id.timerTextView);
 
         answers = new ArrayList<>();
 
         generateQuestion();
+
+        // set the count down timer
+        new CountDownTimer((30 * 1000) + 100, 1000) {
+
+            // called for every tick = 1000 millis
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timerTextView.setText(String.valueOf(millisUntilFinished/1000)+"s");
+            }
+
+            // called when the timer completes
+            @Override
+            public void onFinish() {
+                // reset the timer text view and show the show to the user
+                timerTextView.setText("0s");
+                resultTextView.setText("Your score is "+Integer.toString(score)+"/"+Integer.toString(numberOfQuestions));
+            }
+        }.start();
     }
 }
