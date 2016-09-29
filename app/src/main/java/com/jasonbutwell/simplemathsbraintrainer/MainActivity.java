@@ -19,11 +19,42 @@ public class MainActivity extends AppCompatActivity {
     TextView pointsTextView;
     TextView sumTextView;
     TextView timerTextView;
+    Button playAgainButton;
     ArrayList<Integer> answers;
 
     int locationOfCorrectAnswer;
     int score = 0;
     int numberOfQuestions = 0;
+
+    public void playAgain(View view) {
+        score = 0;
+        numberOfQuestions = 0;
+
+        timerTextView.setText("30s");
+        pointsTextView.setText("0/0");
+        resultTextView.setText("");
+
+        playAgainButton.setVisibility(View.INVISIBLE);
+
+        // set the count down timer
+        new CountDownTimer((30 * 1000) + 100, 1000) {
+
+            // called for every tick = 1000 millis
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timerTextView.setText(String.valueOf(millisUntilFinished/1000)+"s");
+            }
+
+            // called when the timer completes
+            @Override
+            public void onFinish() {
+                // reset the timer text view and show the show to the user
+                playAgainButton.setVisibility(View.VISIBLE);
+                timerTextView.setText("0s");
+                resultTextView.setText("Your score is "+Integer.toString(score)+"/"+Integer.toString(numberOfQuestions));
+            }
+        }.start();
+    }
 
     public void start( View view ) {
         // start the start button to invisible
@@ -93,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         startButton = (Button) findViewById(R.id.startButton);
+        playAgainButton = (Button) findViewById(R.id.playAgainButton);
 
         answerButtons = new Button[4];
         answerButtons[0] = (Button) findViewById(R.id.button0);
@@ -110,22 +142,6 @@ public class MainActivity extends AppCompatActivity {
 
         generateQuestion();
 
-        // set the count down timer
-        new CountDownTimer((30 * 1000) + 100, 1000) {
-
-            // called for every tick = 1000 millis
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timerTextView.setText(String.valueOf(millisUntilFinished/1000)+"s");
-            }
-
-            // called when the timer completes
-            @Override
-            public void onFinish() {
-                // reset the timer text view and show the show to the user
-                timerTextView.setText("0s");
-                resultTextView.setText("Your score is "+Integer.toString(score)+"/"+Integer.toString(numberOfQuestions));
-            }
-        }.start();
+        playAgain(findViewById(R.id.playAgainButton));
     }
 }
