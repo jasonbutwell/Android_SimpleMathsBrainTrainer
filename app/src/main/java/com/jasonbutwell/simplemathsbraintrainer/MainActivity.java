@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     TextView resultTextView;
     TextView pointsTextView;
     TextView sumTextView;
-    ArrayList<Integer> answers = new ArrayList<>();
+    ArrayList<Integer> answers;
 
     int locationOfCorrectAnswer;
     int score = 0;
@@ -29,15 +29,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void generateQuestion() {
+
         Random rand = new Random();
 
         int a = rand.nextInt(21);
         int b = rand.nextInt(21);
+        int incorrectAnswer;
 
         sumTextView.setText(Integer.toString(a)+ "+" + Integer.toString(b));
 
         locationOfCorrectAnswer = rand.nextInt(4);
-        int incorrectAnswer;
+        
+        // clear previous answer entries if we have them
+        if ( answers.size() > 0 )
+            answers.clear();
 
         // generate the answers
 
@@ -58,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         // loop through all the answer buttons and set their text accordingly.
         for (int i=0; i < 4; i++ )
             answerButtons[i].setText(Integer.toString(answers.get(i)));
+            //Log.i("answers",Integer.toString(answers.get(i)));
 
     }
 
@@ -73,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         numberOfQuestions++;
         pointsTextView.setText(Integer.toString(score)+"/"+Integer.toString(numberOfQuestions));
+        generateQuestion();
 
         // output to log for testing.
         Log.i("Tag", (String)view.getTag());
@@ -94,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
         resultTextView = (TextView) findViewById(R.id.resultTextView);
         pointsTextView = (TextView) findViewById(R.id.pointsTextView);
         sumTextView = (TextView) findViewById(R.id.sumTextView);
+
+        answers = new ArrayList<>();
 
         generateQuestion();
     }
