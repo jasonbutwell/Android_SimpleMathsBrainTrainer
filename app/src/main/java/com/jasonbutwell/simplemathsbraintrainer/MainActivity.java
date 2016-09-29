@@ -12,48 +12,23 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button[] answerButtons;
     Button startButton;
     TextView resultTextView;
+    TextView pointsTextView;
+    TextView sumTextView;
     ArrayList<Integer> answers = new ArrayList<>();
+
     int locationOfCorrectAnswer;
     int score = 0;
+    int numberOfQuestions = 0;
 
     public void start( View view ) {
         // start the start button to invisible
         startButton.setVisibility(View.INVISIBLE);
     }
 
-    public void chooseAnswer( View view ) {
-        // compare the button tag to the correct answer
-        if ( view.getTag().toString().equals(Integer.toString(locationOfCorrectAnswer))) {
-            //Log.i("correct","correct");
-            score++;
-            resultTextView.setText("Correct!");
-        } else {
-            resultTextView.setText("Incorrect!");
-        }
-
-        // output to log for testing.
-        Log.i("Tag", (String)view.getTag());
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        startButton = (Button) findViewById(R.id.startButton);
-
-        TextView sumTextView = (TextView) findViewById(R.id.sumTextView);
-
-        Button []answerButtons = {  (Button)findViewById(R.id.button0),
-                                    (Button)findViewById(R.id.button1),
-                                    (Button)findViewById(R.id.button2),
-                                    (Button)findViewById(R.id.button3)
-        };
-
-        resultTextView = (TextView)findViewById(R.id.resultTextView);
-
+    public void generateQuestion() {
         Random rand = new Random();
 
         int a = rand.nextInt(21);
@@ -81,8 +56,45 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // loop through all the answer buttons and set their text accordingly.
-        for (int i=0; i< 4; i++ )
+        for (int i=0; i < 4; i++ )
             answerButtons[i].setText(Integer.toString(answers.get(i)));
 
+    }
+
+    public void chooseAnswer( View view ) {
+        // compare the button tag to the correct answer
+        if ( view.getTag().toString().equals(Integer.toString(locationOfCorrectAnswer))) {
+            //Log.i("correct","correct");
+            score++;
+            resultTextView.setText("Correct!");
+        } else {
+            resultTextView.setText("Incorrect!");
+        }
+
+        numberOfQuestions++;
+        pointsTextView.setText(Integer.toString(score)+"/"+Integer.toString(numberOfQuestions));
+
+        // output to log for testing.
+        Log.i("Tag", (String)view.getTag());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        startButton = (Button) findViewById(R.id.startButton);
+
+        answerButtons = new Button[4];
+        answerButtons[0] = (Button) findViewById(R.id.button0);
+        answerButtons[1] = (Button) findViewById(R.id.button1);
+        answerButtons[2] = (Button) findViewById(R.id.button2);
+        answerButtons[3] = (Button) findViewById(R.id.button3);
+
+        resultTextView = (TextView) findViewById(R.id.resultTextView);
+        pointsTextView = (TextView) findViewById(R.id.pointsTextView);
+        sumTextView = (TextView) findViewById(R.id.sumTextView);
+
+        generateQuestion();
     }
 }
